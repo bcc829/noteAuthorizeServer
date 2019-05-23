@@ -1,37 +1,37 @@
 package com.rabbitcat.authorizeSever.authenticationProvider
 
+import com.rabbitcat.authorizeSever.repository.member.MemberRepository
 import com.rabbitcat.authorizeSever.service.userDetailsService.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Component
 
 @Component
-class CustomAuthenticationProvider: AuthenticationProvider {
+class Oauth2AuthenticationProvider: AuthenticationProvider {
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
 
+    @Autowired
+    lateinit var memberRepository: MemberRepository
+
     override fun authenticate(authentication: Authentication?): Authentication {
-        var userName = authentication?.principal.toString()
-        var password = authentication?.credentials.toString()
+        var principal = authentication?.principal.toString()
 
-        var customUserDetails = customUserDetailsService.loadUserByUsername(userName)
+        var user = memberRepository.findBySnsPrincipal(principal)
 
-        when(customUserDetails != null){
-            true -> throw UsernameNotFoundException("해당 회원의 정보가 없음")
+        when(user != null){
+            true -> {
+                var customUserDetails = customUserDetailsService.loadUserByUsername(user.id)!!
+                return UsernamePasswordAuthenticationToken(customUserDetails.username, customUserDetails.password, customUserDetails.authorities)
+            }
             false -> {
-                if(password != customUserDetails?.password)
-                    throw BadCredentialsException("비밀번호가 맞지 않음")
-                else
-                    return UsernamePasswordAuthenticationToken(userName, password, customUserDetails.authorities)
+                throw UsernameNotFoundException(principal)
             }
         }
-
 
     }
 

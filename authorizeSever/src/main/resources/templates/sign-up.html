@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>member sign-up</title>
+</head>
+<body>
+    <div th:text="${principal}"></div>
+    <form action="/sign-up/oauth", method="post">
+            <label>이메일</label>
+            <input type="text" name="username" placeholder="Email" required>
+            <p class="email" type="hidden">이메일 중복 확인을 해주세요</p>
+            <label>패스워드</label>
+            <input type="password"  name="password" placeholder="Password" required>
+            <label>닉네임</label>
+        <input name="principal" th:value="${principal}" type="hidden">
+        <button type="submit">Sign up</button>
+    </form>
+</body>
+</html>

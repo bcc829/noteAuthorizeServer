@@ -20,7 +20,7 @@ class CustomUserDetailsService: UserDetailsService {
 
         return when(member == null){
             true ->  null
-            false ->  CustomUserDetails(member!!.id, member!!.password, member.phoneNumber, member.address, member.nickname, member.email)
+            false ->  CustomUserDetails(member.id, member.password, member.phoneNumber, member.address, member.nickname, member.email)
         }
     }
 }
