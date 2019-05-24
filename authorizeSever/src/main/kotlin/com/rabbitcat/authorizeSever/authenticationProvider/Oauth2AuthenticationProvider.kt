@@ -29,7 +29,7 @@ class Oauth2AuthenticationProvider: AuthenticationProvider {
                 return UsernamePasswordAuthenticationToken(customUserDetails.username, customUserDetails.password, customUserDetails.authorities)
             }
             false -> {
-                throw UsernameNotFoundException(principal)
+                throw UsernameNotFoundException("해당 SNS로 가입한 회원이 없음")
             }
         }
 

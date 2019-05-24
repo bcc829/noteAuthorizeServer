@@ -1,3 +1,9 @@
+server:
+  port: 8080
+  session:
+    cookie:
+      name: APPSESSIONID
+
 security:
   oauth2:
     client:
@@ -21,16 +27,13 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-  redis:
-    host: localhost
-    port: 6379
   main:
     allow-bean-definition-overriding: true
 
 facebook:
   client:
-    client-id:
-    client-secret: 
+    client-id: 
+    client-secret:
     access-token-uri: https://graph.facebook.com/oauth/access_token
     user-authorization-uri: https://www.facebook.com/dialog/oauth
     token-name: oauth_token
@@ -41,10 +44,10 @@ facebook:
 
 github:
   client:
-    clientId: bd1c0a783ccdd1c9b9e4
-    clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
-    accessTokenUri: https://github.com/login/oauth/access_token
-    userAuthorizationUri: https://github.com/login/oauth/authorize
-    clientAuthenticationScheme: form
+    client-id:
+    client-secret:
+    access-token-uri: https://github.com/login/oauth/access_token
+    user-authorization-uri: https://github.com/login/oauth/authorize
+    client-authentication-scheme: form
   resource:
-    userInfoUri: https://api.github.com/user
+    user-info-uri: https://api.github.com/user

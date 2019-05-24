@@ -2,28 +2,20 @@ package com.rabbitcat.authorizeSever.handler
 
 import com.rabbitcat.authorizeSever.repository.member.MemberRepository
 import com.rabbitcat.authorizeSever.service.userDetailsService.CustomUserDetailsService
-import org.omg.CORBA.Request
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
-import javax.servlet.RequestDispatcher
-import javax.servlet.ServletContext
 
 
 @Component
-class OAuth2SuccessHandler: AuthenticationSuccessHandler {
+class OAuth2SuccessHandler: SavedRequestAwareAuthenticationSuccessHandler() {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    //private val logger = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
@@ -46,6 +38,7 @@ class OAuth2SuccessHandler: AuthenticationSuccessHandler {
             false -> {
                 val user = customUserDetailsService.loadUserByUsername(member.id)
                 SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(user?.username, user?.password, user?.authorities)
+                super.onAuthenticationSuccess(request, response, authentication)
             }
         }
     }

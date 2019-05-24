@@ -65,7 +65,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
             .and().authenticationProvider(customAuthenticationProvider).formLogin().loginPage("/").loginProcessingUrl("/login")
             .and().exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
             .and().logout().logoutSuccessUrl("/").permitAll()
-            .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter::class.java).authenticationProvider(oauth2AuthenticationProvider)
+            .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter::class.java)//.authenticationProvider(oauth2AuthenticationProvider)
 
 
 //        http.csrf().disable()
@@ -110,7 +110,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
                 client.getResource().userInfoUri, client.getClient().clientId)
         tokenServices.setRestTemplate(template)
         filter.setTokenServices(tokenServices)
-       //filter.setAuthenticationSuccessHandler(oAuth2SuccessHandler)
+        filter.setAuthenticationSuccessHandler(oAuth2SuccessHandler)
         return filter
     }
 
