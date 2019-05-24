@@ -14,9 +14,9 @@ data class Member(
         @Id
         val id: String,
         var password: String,
-        var phoneNumber: String,
-        var address: String,
+        var phoneNumber: String?,
+        var address: String?,
         var nickname: String,
-        var email: String,
+        var email: String?,
         val regDate: Date? = Date(),
         val snsPrincipal: String? = null)
