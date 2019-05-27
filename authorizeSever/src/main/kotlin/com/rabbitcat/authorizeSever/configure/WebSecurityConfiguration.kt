@@ -1,5 +1,6 @@
 package com.rabbitcat.authorizeSever.configure
 
+import com.rabbitcat.authorizeSever.authenticationProvider.EmailAuthenticationProvider
 import com.rabbitcat.authorizeSever.authenticationProvider.IdAuthenticationProvider
 import com.rabbitcat.authorizeSever.authenticationProvider.Oauth2AuthenticationProvider
 import com.rabbitcat.authorizeSever.clientResource.ClientResources
@@ -46,7 +47,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
     lateinit var idAuthenticationProvider: IdAuthenticationProvider
 
     @Autowired
-    lateinit var oauth2AuthenticationProvider: Oauth2AuthenticationProvider
+    lateinit var emailAuthenticationProvider: EmailAuthenticationProvider
 
     @Bean
     fun noOpPasswordEncoder(): PasswordEncoder {
@@ -62,7 +63,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
             .permitAll()
             .anyRequest()
             .authenticated()
-            .and().formLogin().loginPage("/").loginProcessingUrl("/login")
+            .and().authenticationProvider(idAuthenticationProvider).authenticationProvider(emailAuthenticationProvider).formLogin().loginPage("/").loginProcessingUrl("/login")
             .and().exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
             .and().logout().logoutSuccessUrl("/").permitAll()
             .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter::class.java)//.authenticationProvider(oauth2AuthenticationProvider)
