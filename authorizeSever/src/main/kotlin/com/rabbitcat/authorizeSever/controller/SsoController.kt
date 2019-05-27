@@ -40,11 +40,10 @@ class SsoController {
     @PostMapping("/sign-up/oauth")
     fun registUesr(@RequestParam("id", required = true) id: String, @RequestParam("password", required = true) password: String,
                    @RequestParam("nick_name", required = true) nickName: String, @RequestParam("address", required = false) address: String?,
-                   @RequestParam("phone_number", required = false) phoneNumber: String?, @RequestParam("email", required = false) email: String?,
-                   @RequestParam("sns_principal", required = false) snsPrincipal: String?): String{
+                   @RequestParam("phone_number", required = false) phoneNumber: String?, @RequestParam("email", required = false) email: String?): String{
 
         val member = Member(id = id, password = password, nickname = nickName, address = address, phoneNumber = phoneNumber,
-                email = email, snsPrincipal = snsPrincipal)
+                email = email)
 
         try {
             memberService.addMember(member)

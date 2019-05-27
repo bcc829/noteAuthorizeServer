@@ -2,7 +2,6 @@ package com.rabbitcat.authorizeSever.configure
 
 import com.rabbitcat.authorizeSever.authenticationProvider.EmailAuthenticationProvider
 import com.rabbitcat.authorizeSever.authenticationProvider.IdAuthenticationProvider
-import com.rabbitcat.authorizeSever.authenticationProvider.Oauth2AuthenticationProvider
 import com.rabbitcat.authorizeSever.clientResource.ClientResources
 import com.rabbitcat.authorizeSever.handler.OAuth2SuccessHandler
 import org.springframework.beans.factory.annotation.Autowired

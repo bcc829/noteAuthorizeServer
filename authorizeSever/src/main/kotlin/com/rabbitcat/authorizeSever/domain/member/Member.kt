@@ -18,5 +18,5 @@ data class Member(
         var address: String?,
         var nickname: String,
         var email: String?,
-        val regDate: Date? = Date(),
-        val snsPrincipal: String? = null)
+        val regDate: Date? = Date()
+        )
