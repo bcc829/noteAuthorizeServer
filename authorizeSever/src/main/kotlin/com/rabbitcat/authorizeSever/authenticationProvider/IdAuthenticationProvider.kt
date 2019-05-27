@@ -21,10 +21,10 @@ class IdAuthenticationProvider: AuthenticationProvider {
 
         var customUserDetails = idUserDetailsService.loadUserByUsername(userName)
 
-        when(customUserDetails != null){
+        when(customUserDetails == null){
             true -> throw UsernameNotFoundException("해당 회원의 정보가 없음")
             false -> {
-                if(password != customUserDetails?.password)
+                if(password != customUserDetails.password)
                     throw BadCredentialsException("비밀번호가 맞지 않음")
                 else
                     return UsernamePasswordAuthenticationToken(userName, password, customUserDetails.authorities)
