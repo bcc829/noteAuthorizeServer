@@ -1,6 +1,6 @@
 package com.rabbitcat.authorizeSever.configure
 
-import com.rabbitcat.authorizeSever.authenticationProvider.CustomAuthenticationProvider
+import com.rabbitcat.authorizeSever.authenticationProvider.IdAuthenticationProvider
 import com.rabbitcat.authorizeSever.authenticationProvider.Oauth2AuthenticationProvider
 import com.rabbitcat.authorizeSever.clientResource.ClientResources
 import com.rabbitcat.authorizeSever.handler.OAuth2SuccessHandler
@@ -43,7 +43,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
     lateinit var oAuth2SuccessHandler: OAuth2SuccessHandler
 
     @Autowired
-    lateinit var customAuthenticationProvider: CustomAuthenticationProvider
+    lateinit var idAuthenticationProvider: IdAuthenticationProvider
 
     @Autowired
     lateinit var oauth2AuthenticationProvider: Oauth2AuthenticationProvider
@@ -62,7 +62,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
             .permitAll()
             .anyRequest()
             .authenticated()
-            .and().authenticationProvider(customAuthenticationProvider).formLogin().loginPage("/").loginProcessingUrl("/login")
+            .and().formLogin().loginPage("/").loginProcessingUrl("/login")
             .and().exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
             .and().logout().logoutSuccessUrl("/").permitAll()
             .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter::class.java)//.authenticationProvider(oauth2AuthenticationProvider)

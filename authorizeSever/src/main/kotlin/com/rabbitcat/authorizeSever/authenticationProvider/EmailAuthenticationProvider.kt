@@ -1,26 +1,25 @@
 package com.rabbitcat.authorizeSever.authenticationProvider
 
-import com.rabbitcat.authorizeSever.service.userDetailsService.CustomUserDetailsService
+import com.rabbitcat.authorizeSever.service.userDetailsService.EmailUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.stereotype.Component
 
 @Component
-class CustomAuthenticationProvider: AuthenticationProvider {
+class EmailAuthenticationProvider: AuthenticationProvider {
 
     @Autowired
-    lateinit var customUserDetailsService: CustomUserDetailsService
+    lateinit var emailUserDetailsService: EmailUserDetailsService
 
     override fun authenticate(authentication: Authentication?): Authentication {
         var userName = authentication?.principal.toString()
         var password = authentication?.credentials.toString()
 
-        var customUserDetails = customUserDetailsService.loadUserByUsername(userName)
+        var customUserDetails = emailUserDetailsService.loadUserByUsername(userName)
 
         when(customUserDetails != null){
             true -> throw UsernameNotFoundException("해당 회원의 정보가 없음")
@@ -36,6 +35,6 @@ class CustomAuthenticationProvider: AuthenticationProvider {
     }
 
     override fun supports(authentication: Class<*>?): Boolean {
-        return true
+        return authentication?.equals(UsernamePasswordAuthenticationToken::class.java)!!
     }
 }

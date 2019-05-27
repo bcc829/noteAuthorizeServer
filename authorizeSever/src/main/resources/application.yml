@@ -32,20 +32,20 @@ spring:
 
 facebook:
   client:
-    client-id: 
+    client-id:
     client-secret:
     access-token-uri: https://graph.facebook.com/oauth/access_token
-    user-authorization-uri: https://www.facebook.com/dialog/oauth
+    user-authorization-uri: https://www.facebook.com/dialog/oauth?scope=email
     token-name: oauth_token
     authentication-scheme: query
     client-authentication-scheme: form
   resource:
-    user-info-uri: https://graph.facebook.com/me
+    user-info-uri: https://graph.facebook.com/me?fields=email,name
 
 github:
   client:
     client-id:
-    client-secret:
+    client-secret: 
     access-token-uri: https://github.com/login/oauth/access_token
     user-authorization-uri: https://github.com/login/oauth/authorize
     client-authentication-scheme: form

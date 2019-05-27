@@ -1,37 +1,36 @@
 package com.rabbitcat.authorizeSever.authenticationProvider
 
-import com.rabbitcat.authorizeSever.repository.member.MemberRepository
 import com.rabbitcat.authorizeSever.service.userDetailsService.IdUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 
 @Component
-class Oauth2AuthenticationProvider: AuthenticationProvider {
+class IdAuthenticationProvider: AuthenticationProvider {
 
     @Autowired
     lateinit var idUserDetailsService: IdUserDetailsService
 
-    @Autowired
-    lateinit var memberRepository: MemberRepository
-
     override fun authenticate(authentication: Authentication?): Authentication {
-        var principal = authentication?.principal.toString()
+        var userName = authentication?.principal.toString()
+        var password = authentication?.credentials.toString()
 
-        var user = memberRepository.findBySnsPrincipal(principal)
+        var customUserDetails = idUserDetailsService.loadUserByUsername(userName)
 
-        when(user != null){
-            true -> {
-                var customUserDetails = idUserDetailsService.loadUserByUsername(user.id)!!
-                return UsernamePasswordAuthenticationToken(customUserDetails.username, customUserDetails.password, customUserDetails.authorities)
-            }
+        when(customUserDetails != null){
+            true -> throw UsernameNotFoundException("해당 회원의 정보가 없음")
             false -> {
-                throw UsernameNotFoundException("해당 SNS로 가입한 회원이 없음")
+                if(password != customUserDetails?.password)
+                    throw BadCredentialsException("비밀번호가 맞지 않음")
+                else
+                    return UsernamePasswordAuthenticationToken(userName, password, customUserDetails.authorities)
             }
         }
+
 
     }
 

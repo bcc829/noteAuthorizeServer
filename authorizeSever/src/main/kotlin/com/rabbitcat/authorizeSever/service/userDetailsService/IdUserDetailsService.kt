@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.lang.Exception
 
 @Service
-class CustomUserDetailsService: UserDetailsService {
+class IdUserDetailsService: UserDetailsService {
 
     @Autowired
     lateinit var memberRepository: MemberRepository
