@@ -3,22 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <title>member sign-up</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    <style>
+        body{
+            display: table-cell;
+            vertical-align: middle;
+            background-color: #e0f2f1 !important;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .medium-small {
+            font-size: 0.9rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login-form {
+            width: 280px;
+        }
+
+        .login-form-text {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+        }
+
+        .login-text {
+            margin-top: -6px;
+            margin-left: -6px !important;
+        }
+
+        .margin {
+            margin: 0 !important;
+        }
+
+        .pointer-events {
+            pointer-events: auto !important;
+        }
+
+        .input-field >.material-icons  {
+            padding-top:10px;
+        }
+
+        .input-field div.error{
+            position: relative;
+            top: -1rem;
+            left: 3rem;
+            font-size: 0.8rem;
+            color:#FF4081;
+            -webkit-transform: translateY(0%);
+            -ms-transform: translateY(0%);
+            -o-transform: translateY(0%);
+            transform: translateY(0%);
+        }
+    </style>
 </head>
 <body>
-    <form action="/sign-up/oauth", method="post">
-        <label>아이디</label>
-        <input type="text" name="id" placeholder="Email" required>
-        <label>패스워드</label>
-        <input type="password"  name="password" placeholder="Password" required> <br/>
-        <label>이메일</label>
-        <input type="email" th:if="${email == null}" th:value="${email == null} ? '' : ${email}" name="email" placeholder="Email" required>
-        <label>닉네임</label>
-        <input type="text"  name="nick_name" placeholder="닉네임" required><br/>
-        <label>주소</label>
-        <input type="text"  name="address" placeholder="주소"><br/>
-        <label>휴대폰 번호</label>
-        <input type="tel"  name="phone_number" placeholder="휴대폰 번호"><br/>
-        <button type="submit">Sign up</button>
-    </form>
+<div id="login-page" class="row">
+    <div class="col s12 z-depth-4 card-panel">
+        <form class="login-form" method="post" action="/sign-up/oauth">
+            <div class="row">
+                <div class="input-field col s12 center">
+                    <h4>Register</h4>
+                    <p class="center">Join to our community now !</p>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="username" name="id" type="text"/>
+                    <label for="username">ID</label>
+                </div>
+            </div>
+
+            <div class="row margin" th:hidden="${email != null}">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                    <i class="material-icons prefix">email</i>
+                    <input id="email" name="email" type="text" th:value="${email == null} ? '' : ${email}" style="cursor: auto;" />
+                    <label for="email">Email</label>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password" name="password" type="password" />
+                    <label for="password">Password</label>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password_a" name="cpassword" type="password" />
+                    <label for="password_a">Password again</label>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">face</i>
+                    <input id="nick_name" name="nick_name" type="text" />
+                    <label for="nick_name">닉네임</label>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">home</i>
+                    <input id="address" name="address" type="text" />
+                    <label for="address">주소</label>
+                </div>
+            </div>
+
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">phone</i>
+                    <input id="phone_number" name="phone_number" type="text" />
+                    <label for="phone_number">핸드폰 번호</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class="btn waves-effect waves-light col s12">REGISTER NOW</button>
+
+                </div>
+                <div class="input-field col s12">
+                    <p class="margin center medium-small sign-up">Already have an account? <a href="./login">Login</a></p>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
 </body>
+<script type="text/html">
+    $(".login-form").validate({
+        rules: {
+            username: {
+                required: true,
+                minlength: 4
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true,
+                minlength: 5
+            },
+            cpassword: {
+                required: true,
+                minlength: 5,
+                equalTo: "#password"
+            }
+        },
+        //For custom messages
+        messages: {
+            username: {
+                required: "Enter a username",
+                minlength: "Enter at least 4 characters"
+            }
+        },
+        errorElement: 'div',
+        errorPlacement: function(error, element) {
+            var placement = $(element).data('error');
+            if (placement) {
+                $(placement).append(error)
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+</script>
 </html>
+
+

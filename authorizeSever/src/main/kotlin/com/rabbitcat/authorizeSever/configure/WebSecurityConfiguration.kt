@@ -58,7 +58,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         http.csrf().disable()
             .antMatcher("/**")
             .authorizeRequests()
-            .antMatchers("/", "/login**", "/webjars/**", "/error**", "/sign-up**")
+            .antMatchers("/", "/login**", "/webjars/**", "/error**", "/sign-up/oauth")
             .permitAll()
             .anyRequest()
             .authenticated()

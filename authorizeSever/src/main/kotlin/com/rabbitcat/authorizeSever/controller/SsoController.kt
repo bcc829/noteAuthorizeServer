@@ -31,8 +31,8 @@ class SsoController {
         return map
     }
 
-    @GetMapping("/sign-up/oauth")
-    fun signUpPage(model: Model): String{
+    @RequestMapping("/sign-up/oauth")
+    fun signUpPage(): String{
 
         return "sign-up"
     }
