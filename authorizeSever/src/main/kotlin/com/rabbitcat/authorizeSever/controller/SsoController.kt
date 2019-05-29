@@ -1,15 +1,14 @@
 package com.rabbitcat.authorizeSever.controller
 
 import com.rabbitcat.authorizeSever.domain.member.Member
+import com.rabbitcat.authorizeSever.enum.CheckAttribute
 import com.rabbitcat.authorizeSever.service.memberService.MemberService
 import com.rabbitcat.authorizeSever.service.ssoService.SsoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.security.Principal
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -31,26 +30,33 @@ class SsoController {
         return map
     }
 
-    @RequestMapping("/sign-up/oauth")
+    @GetMapping("/sign-up/oauth")
     fun signUpPage(): String{
-
         return "sign-up"
     }
 
-    @PostMapping("/sign-up/oauth")
-    fun registUesr(@RequestParam("id", required = true) id: String, @RequestParam("password", required = true) password: String,
-                   @RequestParam("nick_name", required = true) nickName: String, @RequestParam("address", required = false) address: String?,
-                   @RequestParam("phone_number", required = false) phoneNumber: String?, @RequestParam("email", required = false) email: String?): String{
+    @RequestMapping("/duplication_check/{checkAttribute}/{value}")
+    @ResponseBody
+    fun duplicationCheck(@PathVariable("checkAttribute") attribute: String, @PathVariable("value") value: String): Boolean{
+        return memberService.userInfoDuplicationCheck(attribute, value.trim())
+    }
 
-        val member = Member(id = id, password = password, nickname = nickName, address = address, phoneNumber = phoneNumber,
-                email = email)
+    @PostMapping("/sign-up/oauth")
+    fun registUesr(@RequestParam("username", required = true) username: String, @RequestParam("password", required = true) password: String,
+                   @RequestParam("nickname", required = true) nickname: String, @RequestParam("address", required = false) address: String?,
+                   @RequestParam("phone_number", required = false) phoneNumber: String?, @RequestParam("email", required = false) email: String?,
+                   request: HttpServletRequest): String{
+
+        val member = Member(id = username.trim(), password = password.trim(), nickname = nickname.trim(), address = address?.trim(), phoneNumber = phoneNumber?.trim(),
+                email = email?.trim())
 
         try {
             memberService.addMember(member)
         } catch (e: Exception){
             return "redirect:/sign-up/oauth?error"
         }
-        return "redirect:/?register"
+
+        return "redirect:/?registration"
     }
 
     @RequestMapping("/userLogout")

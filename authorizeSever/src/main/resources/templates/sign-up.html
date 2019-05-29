@@ -15,7 +15,8 @@
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
     <style>
         body{
             display: table-cell;
@@ -93,8 +94,8 @@
                 <div class="input-field col s12">
                     <!-- <i class="mdi-social-person-outline prefix"></i> -->
                     <i class="material-icons prefix">account_circle</i>
-                    <input id="username" name="id" type="text"/>
-                    <label for="username">ID</label>
+                    <input id="username" name="username" type="text"/>
+                    <label for="username">아이디</label>
                 </div>
             </div>
 
@@ -103,7 +104,7 @@
                     <!-- <i class="mdi-social-person-outline prefix"></i> -->
                     <i class="material-icons prefix">email</i>
                     <input id="email" name="email" type="text" th:value="${email == null} ? '' : ${email}" style="cursor: auto;" />
-                    <label for="email">Email</label>
+                    <label for="email">이메일</label>
                 </div>
             </div>
 
@@ -112,7 +113,7 @@
                     <!-- <i class="mdi-action-lock-outline prefix"></i> -->
                     <i class="material-icons prefix">vpn_key</i>
                     <input id="password" name="password" type="password" />
-                    <label for="password">Password</label>
+                    <label for="password">패스워드</label>
                 </div>
             </div>
 
@@ -121,7 +122,7 @@
                     <!-- <i class="mdi-action-lock-outline prefix"></i> -->
                     <i class="material-icons prefix">vpn_key</i>
                     <input id="password_a" name="cpassword" type="password" />
-                    <label for="password_a">Password again</label>
+                    <label for="password_a">패스워드를 한번 더 입력해 주세요</label>
                 </div>
             </div>
 
@@ -129,8 +130,8 @@
                 <div class="input-field col s12">
                     <!-- <i class="mdi-action-lock-outline prefix"></i> -->
                     <i class="material-icons prefix">face</i>
-                    <input id="nick_name" name="nick_name" type="text" />
-                    <label for="nick_name">닉네임</label>
+                    <input id="nickname" name="nickname" type="text" />
+                    <label for="nickname">닉네임</label>
                 </div>
             </div>
 
@@ -154,11 +155,11 @@
 
             <div class="row">
                 <div class="input-field col s12">
-                    <button type="submit" class="btn waves-effect waves-light col s12">REGISTER NOW</button>
+                    <button type="submit" class="btn waves-effect waves-light col s12">회원 가입</button>
 
                 </div>
                 <div class="input-field col s12">
-                    <p class="margin center medium-small sign-up">Already have an account? <a href="./login">Login</a></p>
+                    <p class="margin center medium-small sign-up">이미 회원이시라구요? <a href="/">Login</a></p>
                 </div>
             </div>
 
@@ -167,16 +168,24 @@
     </div>
 </div>
 </body>
-<script type="text/html">
+<script type="text/javascript">
+$( document ).ready(function() {
+
+    $.validator.addMethod('isDuplication', function(value, element){
+        return checkDuplicationAttribute(element.name, value);
+    }, 'duplicated');
+
     $(".login-form").validate({
         rules: {
             username: {
                 required: true,
-                minlength: 4
+                minlength: 4,
+                isDuplication: true
             },
             email: {
                 required: true,
-                email: true
+                email: true,
+                isDuplication: true
             },
             password: {
                 required: true,
@@ -186,25 +195,65 @@
                 required: true,
                 minlength: 5,
                 equalTo: "#password"
+            },
+            nickname: {
+                required: true,
+                minlength: 2,
+                isDuplication: true
             }
         },
         //For custom messages
         messages: {
             username: {
-                required: "Enter a username",
-                minlength: "Enter at least 4 characters"
+                required: "ID를 입력 하세요.",
+                minlength: "ID는 4글자 이상 입력 해야 합니다.",
+                isDuplication : "중복된 ID 입니다. 다른 ID를 입력해 주세요"
+            },
+            email: {
+                required: "이메일 입력 하세요.",
+                email: "이메일 형식이 맞지 않습니다.",
+                isDuplication: "중복된 이메일 입니다. 다른 이메일을 입력해 주세요"
+            },
+            password: {
+                required: "비밀번호를 입력 하세요",
+                minlength: "비밀번호는 4글자 이상 입력 해야 합니다."
+            },
+            cpassword: {
+                required: "비밀번호를 입력 하세요",
+                minlength: "비밀번호는 4글자 이상 입력 해야 합니다.",
+                equalTo: "비밀 번호가 맞지 않습니다."
+            },
+            nickname: {
+                required: "닉네임을 입력하세요",
+                minlength: "닉네임은 두 글자 이상 입니다",
+                isDuplication: "중복된 이메일입니다. 다른 닉네임을 입력해 주세요"
             }
         },
         errorElement: 'div',
         errorPlacement: function(error, element) {
             var placement = $(element).data('error');
             if (placement) {
-                $(placement).append(error)
+                $(placement).append(error);
             } else {
                 error.insertAfter(element);
             }
         }
     });
+
+    function checkDuplicationAttribute(attribute, value){
+        var result
+        $.ajax({
+            type: 'GET',
+            url: '/duplication_check/' + attribute + '/' + value,
+            async: false,
+            success: function(data) {
+                console.log('dupcheck response' + data)
+                result = data;
+            }
+        });
+        return result
+    }
+});
 </script>
 </html>
 
