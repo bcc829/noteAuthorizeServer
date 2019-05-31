@@ -98,6 +98,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         val filters = ArrayList<Filter>()
         filters.add(ssoFilter(facebook(), "/login/facebook"))
         filters.add(ssoFilter(github(), "/login/github"))
+        filters.add(ssoFilter(kakao(), "/login/kakao"))
         filter.setFilters(filters)
         return filter
     }
@@ -133,5 +134,10 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         return ClientResources()
     }
 
+    @Bean
+    @ConfigurationProperties("kakao")
+    fun kakao(): ClientResources {
+        return ClientResources()
+    }
 
 }
