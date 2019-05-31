@@ -152,7 +152,8 @@
                     <label for="phone_number">핸드폰 번호</label>
                 </div>
             </div>
-
+            <input name="provider_type" th:value="${providerType}" hidden="true"/>
+            <input name="principal" th:value="${principal}" hidden="true"/>
             <div class="row">
                 <div class="input-field col s12">
                     <button type="submit" class="btn waves-effect waves-light col s12">회원 가입</button>
@@ -247,7 +248,6 @@ $( document ).ready(function() {
             url: '/duplication_check/' + attribute + '/' + value,
             async: false,
             success: function(data) {
-                console.log('dupcheck response' + data)
                 result = data;
             }
         });

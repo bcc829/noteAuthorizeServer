@@ -168,17 +168,21 @@
 
     var param = document.location.href.split('?');
 
-    console.log(param)
-
-    if(param[1] == 'error'){
-        $("#info").show()
-        $("#info").text("아이디, 이메일과 비밀번호를 확인해주세요")
-    }else if(param[1] == 'registration'){
-        $("#info").show()
-        $("#info").text("회원 가입 되었습니다. 로그인을 해주세요")
-    }else{
+    if(param.length > 1){
+        if(param[1].includes('error')){
+            $("#info").show()
+            $("#info").text("아이디, 이메일과 비밀번호를 확인해주세요")
+        }else if(param[1].includes('registration')){
+            $("#info").show()
+            $("#info").text("회원 가입 되었습니다. 로그인을 해주세요")
+        }else{
+            $("#info").hide()
+        }
+    } else{
         $("#info").hide()
     }
+
+
 
 
 </script>

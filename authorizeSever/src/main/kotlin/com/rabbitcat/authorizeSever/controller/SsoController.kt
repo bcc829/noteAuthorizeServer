@@ -1,6 +1,7 @@
 package com.rabbitcat.authorizeSever.controller
 
 import com.rabbitcat.authorizeSever.domain.member.Member
+import com.rabbitcat.authorizeSever.domain.socialMemberInfo.SocialMemberInfo
 import com.rabbitcat.authorizeSever.enum.CheckAttribute
 import com.rabbitcat.authorizeSever.service.memberService.MemberService
 import com.rabbitcat.authorizeSever.service.ssoService.SsoService
@@ -45,13 +46,17 @@ class SsoController {
     fun registUesr(@RequestParam("username", required = true) username: String, @RequestParam("password", required = true) password: String,
                    @RequestParam("nickname", required = true) nickname: String, @RequestParam("address", required = false) address: String?,
                    @RequestParam("phone_number", required = false) phoneNumber: String?, @RequestParam("email", required = false) email: String?,
-                   request: HttpServletRequest): String{
+                   @RequestParam("provider_type", required = false) providerType: String?,  @RequestParam("principal", required = false) principal: String?): String{
 
         val member = Member(id = username.trim(), password = password.trim(), nickname = nickname.trim(), address = address?.trim(), phoneNumber = phoneNumber?.trim(),
                 email = email?.trim())
 
         try {
             memberService.addMember(member)
+            if(providerType != null && principal != null){
+                val socialMemberInfo = SocialMemberInfo(providerType = providerType, principal = principal, memberId = member.id)
+                ssoService.addSocialUserInfo(socialMemberInfo)
+            }
         } catch (e: Exception){
             return "redirect:/sign-up/oauth?error"
         }
