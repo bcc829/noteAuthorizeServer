@@ -61,15 +61,18 @@ class OAuth2SuccessHandler: SavedRequestAwareAuthenticationSuccessHandler() {
                         val socialMemberInfo = SocialMemberInfo(memberId = member.id, providerType = providerType, principal = authentication.principal.toString())
                         ssoService.addSocialUserInfo(socialMemberInfo)
                     }
-                }else{
-                    //sns principal 로그인
-                    val socialMemberInfo = socialMemberInfoRepository.findByPrincipal(authentication.principal.toString())
-                    if(socialMemberInfo != null){
-                        member = memberRepository.findByIdEquals(socialMemberInfo.memberId)
-                    }
+                }
+            }
+
+            true -> {
+                //sns principal 로그인
+                val socialMemberInfo = socialMemberInfoRepository.findByPrincipal(authentication.principal.toString())
+                if(socialMemberInfo != null){
+                    member = memberRepository.findByIdEquals(socialMemberInfo.memberId)
                 }
             }
         }
+
         when (member == null) {
             true -> {
                 request?.setAttribute("email", userEmail)

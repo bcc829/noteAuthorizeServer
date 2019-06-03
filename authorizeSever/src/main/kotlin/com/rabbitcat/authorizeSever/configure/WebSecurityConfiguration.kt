@@ -20,6 +20,8 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext
 import org.springframework.security.oauth2.client.OAuth2RestTemplate
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter
+import org.springframework.security.oauth2.client.token.AccessTokenProvider
+import org.springframework.security.oauth2.client.token.AccessTokenProviderChain
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
@@ -58,7 +60,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         http.csrf().disable()
             .antMatcher("/**")
             .authorizeRequests()
-            .antMatchers("/", "/login**", "/webjars/**", "/error**", "/sign-up/oauth", "/duplication_check/**")
+            .antMatchers("/", "/login/**", "/webjars/**", "/error**", "/sign-up/oauth", "/duplication_check/**")
             .permitAll()
             .anyRequest()
             .authenticated()
@@ -99,6 +101,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         filters.add(ssoFilter(facebook(), "/login/facebook"))
         filters.add(ssoFilter(github(), "/login/github"))
         filters.add(ssoFilter(kakao(), "/login/kakao"))
+        filters.add(ssoFilter(google(), "/login/google"))
         filter.setFilters(filters)
         return filter
     }
@@ -140,4 +143,9 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
         return ClientResources()
     }
 
+    @Bean
+    @ConfigurationProperties("google")
+    fun google(): ClientResources {
+        return ClientResources()
+    }
 }

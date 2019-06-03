@@ -4,13 +4,6 @@ server:
     cookie:
       name: APPSESSIONID
 
-security:
-  oauth2:
-    client:
-      client-id: acme
-      client-secret: acmesecret
-      scope: read,write
-      auto-approve-scopes: '.*'
 spring:
   datasource:
     platform: postgres
@@ -30,6 +23,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+
 facebook:
   client:
     client-id:
@@ -45,9 +39,30 @@ facebook:
 github:
   client:
     client-id:
-    client-secret: 
+    client-secret:
     access-token-uri: https://github.com/login/oauth/access_token
     user-authorization-uri: https://github.com/login/oauth/authorize
     client-authentication-scheme: form
   resource:
     user-info-uri: https://api.github.com/user
+
+kakao:
+  client:
+    client-id:
+    client-secret:
+    access-token-uri: https://kauth.kakao.com/oauth/token
+    user-authorization-uri: https://kauth.kakao.com/oauth/authorize
+    authentication-scheme: query
+    client-authentication-scheme: form
+  resource:
+    user-info-uri: https://kapi.kakao.com/v2/user/me
+
+google :
+  client :
+    client-id :
+    client-secret: 
+    access-token-uri: https://accounts.google.com/o/oauth2/token
+    user-authorization-uri: https://accounts.google.com/o/oauth2/auth
+    scope: email, profile
+  resource:
+    user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
