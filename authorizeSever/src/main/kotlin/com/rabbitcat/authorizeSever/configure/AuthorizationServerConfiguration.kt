@@ -14,7 +14,10 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
 import javax.sql.DataSource
 
 
@@ -23,13 +26,19 @@ import javax.sql.DataSource
 class AuthorizationServerConfiguration: AuthorizationServerConfigurerAdapter() {
 
     @Autowired
-    private val authorizationCodeServices: AuthorizationCodeServices? = null
+    lateinit var authorizationCodeServices: AuthorizationCodeServices
 
     @Autowired
-    private val approvalStore: ApprovalStore? = null
+    lateinit var approvalStore: ApprovalStore
 
     @Autowired
-    private val tokenStore: TokenStore? = null
+    lateinit var tokenStore: TokenStore
+
+    @Autowired
+    lateinit var clientDetailsService: ClientDetailsService
+
+    @Autowired
+    lateinit var passwordEncoder: PasswordEncoder
 
     @Throws(Exception::class)
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
@@ -38,6 +47,15 @@ class AuthorizationServerConfiguration: AuthorizationServerConfigurerAdapter() {
                 .tokenStore(tokenStore)
                 .authorizationCodeServices(authorizationCodeServices)
                 .approvalStore(approvalStore)
+    }
+
+    override fun configure(clients: ClientDetailsServiceConfigurer) {
+        clients.withClientDetails(clientDetailsService)
+    }
+
+    override fun configure(security: AuthorizationServerSecurityConfigurer) {
+        security.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()")
     }
 
     @Bean
@@ -55,13 +73,16 @@ class AuthorizationServerConfiguration: AuthorizationServerConfigurerAdapter() {
     @Bean
     @Primary
     fun jdbcClientDetailsService(dataSource: DataSource): ClientDetailsService {
-        //
-        return JdbcClientDetailsService(dataSource)
+
+        var clientDetailsService = JdbcClientDetailsService(dataSource)
+
+        clientDetailsService.setPasswordEncoder(passwordEncoder)
+
+        return clientDetailsService
     }
 
     @Bean
     fun jdbcTokenStore(dataSource: DataSource): TokenStore {
-        //
         return JdbcTokenStore(dataSource)
     }
 }

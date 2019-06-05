@@ -4,6 +4,8 @@ import com.rabbitcat.authorizeSever.authenticationProvider.EmailAuthenticationPr
 import com.rabbitcat.authorizeSever.authenticationProvider.IdAuthenticationProvider
 import com.rabbitcat.authorizeSever.clientResource.ClientResources
 import com.rabbitcat.authorizeSever.handler.OAuth2SuccessHandler
+import com.rabbitcat.authorizeSever.service.userDetailsService.EmailUserDetailsService
+import com.rabbitcat.authorizeSever.service.userDetailsService.IdUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -11,9 +13,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.OAuth2ClientContext
@@ -51,8 +55,8 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
     lateinit var emailAuthenticationProvider: EmailAuthenticationProvider
 
     @Bean
-    fun noOpPasswordEncoder(): PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance()
+    fun passwordEncoder(): PasswordEncoder  {
+        return BCryptPasswordEncoder()
     }
 
     @Throws(Exception::class)
@@ -94,6 +98,7 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
 //                .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter::class.java)
 
     }
+
 
     private fun ssoFilter(): Filter {
         val filter = CompositeFilter()

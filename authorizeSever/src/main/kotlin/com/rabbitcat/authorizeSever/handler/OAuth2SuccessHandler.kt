@@ -75,10 +75,10 @@ class OAuth2SuccessHandler: SavedRequestAwareAuthenticationSuccessHandler() {
 
         when (member == null) {
             true -> {
-                request?.setAttribute("email", userEmail)
-                request?.setAttribute("providerType", providerType)
-                request?.setAttribute("principal", authentication.principal.toString())
-                request?.getRequestDispatcher("/sign-up/oauth")?.forward(request, response)
+                request?.session?.setAttribute("email", userEmail)
+                request?.session?.setAttribute("providerType", providerType)
+                request?.session?.setAttribute("principal", authentication.principal.toString())
+                response?.sendRedirect("/sign-up/oauth")
             }
             false -> {
                 val user = idUserDetailsService.loadUserByUsername(member.id)

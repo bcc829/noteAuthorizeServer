@@ -9,15 +9,15 @@ import javax.persistence.Table
 @Table(name="oauth_client_details", schema = "oauth")
 data class OauthClientDetails(
       @Id
-      @Column(name = "client_id")
       val clientId: String,
-
-      @Column(name = "web_server_redirect_uri")
-      val redirectUri: String,
-
-      @Column(name = "logout_uri")
-      val logoutUri: String,
-
-      @Column(name = "base_uri")
-      val baseUri: String
+      val resourceIds: String?,
+      val clientSecret: String,
+      val scope: String,
+      val authorizedGrantTypes: String,
+      val webServerRedirectUri: String,
+      val authorities: String,
+      val accessTokenValidity: Int,
+      val refreshTokenValidity: Int,
+      val additionalInformation: String?,
+      val autoapprove: String
     )

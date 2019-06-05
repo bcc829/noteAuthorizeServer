@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
@@ -14,6 +15,9 @@ class IdAuthenticationProvider: AuthenticationProvider {
 
     @Autowired
     lateinit var idUserDetailsService: IdUserDetailsService
+
+    @Autowired
+    lateinit var passwordEncoder: PasswordEncoder
 
     override fun authenticate(authentication: Authentication?): Authentication {
         var userName = authentication?.principal.toString()
@@ -24,14 +28,12 @@ class IdAuthenticationProvider: AuthenticationProvider {
         when(customUserDetails == null){
             true -> throw UsernameNotFoundException("해당 회원의 정보가 없음")
             false -> {
-                if(password != customUserDetails.password)
-                    throw BadCredentialsException("비밀번호가 맞지 않음")
-                else
+                if(passwordEncoder.matches(password, customUserDetails.password))
                     return UsernamePasswordAuthenticationToken(userName, password, customUserDetails.authorities)
+                else
+                    throw BadCredentialsException("비밀번호가 맞지 않음")
             }
         }
-
-
     }
 
     override fun supports(authentication: Class<*>?): Boolean {

@@ -27,7 +27,7 @@ class SsoSerivceImpl: SsoService {
 
         val oauthClientDetails = oauthClientDetailsRepository.findTopByClientId(clientId)
 
-        return oauthClientDetails.baseUri
+        return oauthClientDetails.webServerRedirectUri
     }
 
     @Transactional
