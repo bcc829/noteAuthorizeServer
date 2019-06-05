@@ -27,14 +27,7 @@ class SsoController {
 
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
-
-    @RequestMapping("/user", "/me")
-    fun user(principal: Principal): Map<String, String> {
-        val map = LinkedHashMap<String, String>()
-        map["name"] = principal.name
-        return map
-    }
-
+    
     @GetMapping("/sign-up/oauth")
     fun signUpPage(request: HttpServletRequest, model: Model): String{
         if(request.session.getAttribute("email") != null){
