@@ -1,0 +1,30 @@
+steps:
+## Set build tag and write to file _TAG
+- name: 'ubuntu'
+  args: ['bash', '-c', 'date -u +%Y%m%dT%H%M_$SHORT_SHA > _TAG']
+        
+##gradle build
+- name: gcr.io/cloud-builders/gradle
+  args: ['bootJar']
+
+##docker build
+- name: gcr.io/cloud-builders/docker
+  entrypoint: sh
+  args: ['-c', 'docker build -t asia.gcr.io/note-project-243400/auth-server:$(cat _TAG) .']
+
+##docker push
+- name: gcr.io/cloud-builders/docker
+  entrypoint: sh
+  args: ['-c', 'docker push asia.gcr.io/note-project-243400/auth-server:$(cat _TAG)']
+
+##kubctl deploy
+- name: gcr.io/cloud-builders/kubectl
+  entrypoint: bash
+  args: 
+  - '-c'
+  - |
+    gcloud container clusters get-credentials note-project-cluster --project="note-project-243400" --zone="asia-northeast2-c"
+    kubectl set image deployment/note-server-node-deploy auth-server=asia.gcr.io/note-project-243400/auth-server:$(cat _TAG)
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-northeast2-c'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=note-project-cluster'
